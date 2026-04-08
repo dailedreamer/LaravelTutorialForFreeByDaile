@@ -16,7 +16,16 @@
             @foreach ($posts as $post)
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
                     <div class="p-6 text-gray-900">
-                        <h3 class="font-bold text-2xl mb-2">{{ $post->title }}</h3>
+                        @if($post->image)
+                            <div class="mb-4">
+                                <img src="{{ asset('storage/' . $post->image) }}" alt="Post Image" class="rounded-lg w-full h-64 object-cover">
+                            </div>
+                        @endif
+                        <h3 class="font-bold text-2xl mb-2 text-blue-600 hover:underline">
+                            <a href="{{ route('posts.show', $post) }}">
+                                {{ $post->title }}
+                            </a>
+                        </h3>
                         <p class="text-gray-700">{{ $post->content }}</p>
                         <p class="text-sm text-gray-400 mt-4">Posted: {{ $post->created_at->diffForHumans() }}</p>
                     </div>
