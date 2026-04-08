@@ -34,6 +34,7 @@
                 <div class="flex justify-between items-center mb-6">
                         
                     <div class="flex space-x-2">
+                    @if(auth()->id() === $post->user_id)
                         <a href="{{ route('posts.edit', $post) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded text-sm transition shadow-sm">
                             Edit Post
                         </a>
@@ -45,6 +46,7 @@
                                 Delete
                             </button>
                         </form>
+                    @endif
                     </div>
                 </div>
 

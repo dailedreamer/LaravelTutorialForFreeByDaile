@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -21,9 +22,9 @@ class PostController extends Controller
     }
 
     // 3. CREATE (Save the data): Catch the form submission and save it
-    // 3. CREATE (Save the data): Catch the form submission and save it
     public function store(Request $request)
     {
+        
         // 1. Validate the data (Added image validation!)
         $request->validate([
             'title' => 'required|string|max:255',
@@ -44,6 +45,7 @@ class PostController extends Controller
             'title' => $request->title,
             'content' => $request->content,
             'image' => $imagePath,
+            'user_id' => Auth::id(),
         ]);
 
         // 4. Send the user back to the feed
@@ -59,6 +61,11 @@ class PostController extends Controller
     // 5. UPDATE (Show the form): Load the edit screen with the current data
     public function edit(Post $post)
     {
+        // This is where the check belongs!
+        if (Auth::id() !== $post->user_id) {
+            abort(403, 'Unauthorized action.');
+        }
+
         return view('posts.edit', compact('post'));
     }
 
@@ -76,6 +83,7 @@ class PostController extends Controller
         $data = [
             'title' => $request->title,
             'content' => $request->content,
+            'user_id' => Auth::id(),
         ];
 
         // 3. If a NEW image is uploaded, save it and add to the data array
