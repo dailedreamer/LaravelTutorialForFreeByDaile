@@ -4,7 +4,7 @@ FROM php:8.4-fpm
 RUN apt-get update && apt-get install -y \
     git curl zip unzip libpng-dev libonig-dev libxml2-dev
 
-# Install Node (optional but good for Laravel builds)
+# Install Node
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs
 
@@ -17,14 +17,11 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www
 
-# Copy composer files first (Docker cache trick 🚀)
-COPY composer.json composer.lock ./
-
-# Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader --no-interaction
-
-# Copy the rest of the application
+# Copy FULL Laravel project first  ⭐ IMPORTANT
 COPY . .
+
+# Install PHP dependencies (now artisan exists)
+RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 # Laravel optimizations
 RUN php artisan config:cache \
