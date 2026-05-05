@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -19,5 +20,9 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::resource('posts', PostController::class)->middleware('auth'); // Protect all post routes with authentication
+
+Route::middleware(['auth'])->group(function(){
+    Route::resource('users', UserController::class)->except(['create','store']); // Protect all user routes with authentication
+});
 
 require __DIR__.'/auth.php';
